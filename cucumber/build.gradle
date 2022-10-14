@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+}
+
+group 'org.cucumber'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':common')
+    implementation project(":client")
+    implementation project(":server")
+
+    testImplementation 'io.cucumber:cucumber-java:7.8.1'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.8.1'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'org.junit.platform:junit-platform-suite:1.9.0'
+}
+
+test {
+    include 'org/joshi/cucumber/**'
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+    // Work around. Gradle does not include enough information to disambiguate
+    // between different examples and scenarios.
+    systemProperty("cucumber.junit-platform.naming-strategy", "long")
+}
