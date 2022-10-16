@@ -90,3 +90,29 @@ Feature: Single Player Scoring
     Then 'Player1' gets disqualified
     And Player scores are the following
       | Player1 0 |
+
+  @R43
+  Scenario: Row 43
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'GOLD' fortune card
+    And 'Player1' rolls the following
+      | SKULL     |
+      | PARROT    |
+      | PARROT    |
+      | SWORD     |
+      | SWORD     |
+      | SWORD     |
+      | GOLD_COIN |
+      | GOLD_COIN |
+    And 'Player1' re-rolls dice with index '1 2' to get the following
+      | GOLD_COIN |
+      | GOLD_COIN |
+    And 'Player1' re-rolls dice with index '3 4 5' to get the following
+      | GOLD_COIN |
+      | GOLD_COIN |
+      | GOLD_COIN |
+    Then 'Player1' ends turn
+    And Player scores are the following
+      | Player1 0 |

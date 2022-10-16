@@ -117,6 +117,11 @@ public class CommonStepDefs {
         assertTrue(testUtils.playerDeadMsg(getReader(playerName), playerName));
     }
 
+    @Then("{string} ends turn")
+    public void playerEndsTurn(String playerName) {
+
+    }
+
     @And("Player scores are the following")
     public void playerScoresAreTheFollowing(List<String> expectedScores) throws IOException {
         var scores = testUtils.readScores(reader1, expectedScores.size());
