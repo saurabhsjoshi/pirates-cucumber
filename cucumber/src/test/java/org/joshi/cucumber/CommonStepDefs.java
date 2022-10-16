@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * This class contains common step defs used across different features.
  */
@@ -93,8 +95,8 @@ public class CommonStepDefs {
     }
 
     @Then("{string} gets disqualified")
-    public void playerGetsDisqualified(String playerName) {
-        // TODO
+    public void playerGetsDisqualified(String playerName) throws IOException {
+        assertTrue(testUtils.playerDeadMsg(getReader(playerName), playerName));
     }
 
     @Then("{string} gets score of {int}")

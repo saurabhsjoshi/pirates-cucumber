@@ -66,12 +66,31 @@ public class TestUtils {
         StringJoiner joiner = new StringJoiner(" ");
         for (var die : dice) {
             joiner.add(String.valueOf(die.index()));
-            var d = die.die();
-            joiner.add(String.valueOf(d.getDiceSide().ordinal()));
-            joiner.add(String.valueOf(d.getState().ordinal()));
+            joiner.add(String.valueOf(die.die().getDiceSide().ordinal()));
         }
 
         writeLine(writer, joiner.toString());
+    }
+
+    public List<String> waitForEndTurn(BufferedReader reader, String playerName) throws IOException {
+        return waitForPrompt(reader, ConsoleUtils.getEndTurnMsg(playerName));
+    }
+
+    /**
+     * Method that returns true if the output contains player dead message.
+     */
+    public boolean playerDeadMsg(BufferedReader reader, String playerName) throws IOException {
+        var lines = waitForEndTurn(reader, playerName);
+        boolean playerDied = false;
+
+        for (String line : lines) {
+            if (line.equals(ConsoleUtils.getSysMsg(ConsoleUtils.DEAD_MSG))) {
+                playerDied = true;
+                break;
+            }
+        }
+
+        return playerDied;
     }
 
     public void writeLine(BufferedWriter writer, String line) throws IOException {
