@@ -95,6 +95,23 @@ public class CommonStepDefs {
                 RigUtils.getDice(roll));
     }
 
+    @And("{string} re-rolls dice with index {string} to get the following")
+    public void playerReRollsDiceWithIndexToGetTheFollowing(String playerName,
+                                                            String index,
+                                                            List<String> roll) throws IOException {
+        // Wait for prompt
+        testUtils.waitForUserPrompt(getReader(playerName));
+
+        // Re roll
+        testUtils.writeLine(getWriter(playerName), "1 " + index);
+
+        // Rig re roll
+        testUtils.rigDice(
+                getReader(playerName),
+                getWriter(playerName),
+                RigUtils.getDice(index, roll));
+    }
+
     @Then("{string} gets disqualified")
     public void playerGetsDisqualified(String playerName) throws IOException {
         assertTrue(testUtils.playerDeadMsg(getReader(playerName), playerName));
@@ -155,7 +172,6 @@ public class CommonStepDefs {
         if (index == 0) {
             return writer1;
         }
-
         return null;
     }
 }

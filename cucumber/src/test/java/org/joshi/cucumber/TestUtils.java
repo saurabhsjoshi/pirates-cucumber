@@ -92,6 +92,9 @@ public class TestUtils {
     }
 
     public void writeLine(BufferedWriter writer, String line) throws IOException {
+        if (writer == null) {
+            return;
+        }
         writer.write(line);
         writer.newLine();
         writer.flush();

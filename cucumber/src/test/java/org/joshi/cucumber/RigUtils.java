@@ -39,4 +39,16 @@ public class RigUtils {
         }
         return dice;
     }
+
+    public static List<Turn.RiggedDie> getDice(String index, List<String> dieList) {
+        var split = index.split("\\s+");
+        List<Turn.RiggedDie> dice = new ArrayList<>();
+
+        for (int i = 0; i < dieList.size(); i++) {
+            int idx = Integer.parseInt(split[i]);
+            dice.add(new Turn.RiggedDie(idx, new Die(Die.Side.valueOf(dieList.get(i)))));
+        }
+
+        return dice;
+    }
 }
