@@ -118,8 +118,8 @@ public class CommonStepDefs {
     }
 
     @Then("{string} ends turn")
-    public void playerEndsTurn(String playerName) {
-
+    public void playerEndsTurn(String playerName) throws IOException {
+        testUtils.endTurn(getReader(playerName), getWriter(playerName), playerName);
     }
 
     @And("Player scores are the following")

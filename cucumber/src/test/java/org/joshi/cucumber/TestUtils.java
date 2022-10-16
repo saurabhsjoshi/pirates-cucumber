@@ -91,6 +91,12 @@ public class TestUtils {
         return playerDied;
     }
 
+    public void endTurn(BufferedReader reader, BufferedWriter writer, String playerName) throws IOException {
+        waitForUserPrompt(reader);
+        writeLine(writer, "0");
+        waitForEndTurn(reader, playerName);
+    }
+
     public void writeLine(BufferedWriter writer, String line) throws IOException {
         if (writer == null) {
             return;

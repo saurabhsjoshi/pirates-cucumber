@@ -113,6 +113,6 @@ Feature: Single Player Scoring
       | GOLD_COIN |
       | GOLD_COIN |
       | GOLD_COIN |
-    Then 'Player1' ends turn
-    And Player scores are the following
-      | Player1 0 |
+    And 'Player1' ends turn
+    Then Player scores are the following
+      | Player1 4800 |
