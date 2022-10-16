@@ -7,9 +7,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.joshi.pirates.cards.FortuneCard;
-import org.joshi.pirates.cards.SeaBattleCard;
-import org.joshi.pirates.cards.SkullCard;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -83,12 +80,16 @@ public class CommonStepDefs {
     @When("{string} gets {string} fortune card")
     public void playerGetsFortuneCard(String playerName, String card) throws IOException {
         // Rig fortune card
-        testUtils.rigFortuneCard(getReader(playerName), getWriter(playerName), getCard(card));
+        testUtils.rigFortuneCard(getReader(playerName), getWriter(playerName), RigUtils.getCard(card));
     }
 
     @When("{string} rolls the following")
-    public void playerRollsTheFollowing(String playerName, List<String> roll) {
-        //TODO
+    public void playerRollsTheFollowing(String playerName, List<String> roll) throws IOException {
+        // Rig roll
+        testUtils.rigDice(
+                getReader(playerName),
+                getWriter(playerName),
+                RigUtils.getDice(roll));
     }
 
     @Then("{string} gets disqualified")
@@ -147,28 +148,6 @@ public class CommonStepDefs {
             return writer1;
         }
 
-        return null;
-    }
-
-    private FortuneCard getCard(String card) {
-        var split = card.split("\\s+");
-
-        // Normal cards
-        if (split.length == 1) {
-            return new FortuneCard(FortuneCard.Type.valueOf(split[0]));
-        }
-
-        String name = split[0];
-
-        switch (name) {
-            case "SEA_BATTLE" -> {
-                return new SeaBattleCard(Integer.parseInt(split[1]));
-            }
-            case "SKULLS" -> {
-                return new SkullCard(Integer.parseInt(split[1]));
-            }
-
-        }
         return null;
     }
 }

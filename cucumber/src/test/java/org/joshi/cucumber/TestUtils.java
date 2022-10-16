@@ -1,5 +1,6 @@
 package org.joshi.cucumber;
 
+import org.joshi.pirates.Turn;
 import org.joshi.pirates.cards.FortuneCard;
 import org.joshi.pirates.cards.SeaBattleCard;
 import org.joshi.pirates.cards.SkullCard;
@@ -10,6 +11,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class TestUtils {
 
@@ -57,6 +59,19 @@ public class TestUtils {
         }
 
         writeLine(writer, line);
+    }
+
+    public void rigDice(BufferedReader reader, BufferedWriter writer, List<Turn.RiggedDie> dice) throws IOException {
+        waitForUserPrompt(reader);
+        StringJoiner joiner = new StringJoiner(" ");
+        for (var die : dice) {
+            joiner.add(String.valueOf(die.index()));
+            var d = die.die();
+            joiner.add(String.valueOf(d.getDiceSide().ordinal()));
+            joiner.add(String.valueOf(d.getState().ordinal()));
+        }
+
+        writeLine(writer, joiner.toString());
     }
 
     public void writeLine(BufferedWriter writer, String line) throws IOException {

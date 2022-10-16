@@ -7,8 +7,14 @@ Feature: Single Player Scoring
     And The player names are the following
       | Player1 |
     When 'Player1' gets 'GOLD' fortune card
-    And 'Player 1' rolls the following
-      | 3 SKULL |
-      | 5 SWORD |
+    And 'Player1' rolls the following
+      | SKULL |
+      | SKULL |
+      | SKULL |
+      | SWORD |
+      | SWORD |
+      | SWORD |
+      | SWORD |
+      | SWORD |
     Then 'Player1' gets disqualified
     And 'Player1' gets score of 0
