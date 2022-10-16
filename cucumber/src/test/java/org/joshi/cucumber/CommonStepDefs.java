@@ -20,9 +20,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CommonStepDefs {
 
     private Logger logger;
+    private TestUtils testUtils;
+
     private Thread loggerThread;
 
     private Process server;
+
+    private final List<String> playerNames = new ArrayList<>(3);
 
     private BufferedReader reader1;
     private BufferedWriter writer1;
@@ -38,6 +42,7 @@ public class CommonStepDefs {
         logger = new Logger(new ArrayList<>(scenario.getSourceTagNames()).get(0).substring(1) + ".txt");
         loggerThread = new Thread(logger);
         loggerThread.start();
+        testUtils = new TestUtils(logger);
     }
 
     @After
@@ -64,8 +69,12 @@ public class CommonStepDefs {
 
 
     @And("The player names are the following")
-    public void thePlayerNamesAreTheFollowing(List<String> names) {
-        //TODO
+    public void thePlayerNamesAreTheFollowing(List<String> names) throws IOException {
+        playerNames.addAll(names);
+
+        // Wait for player name prompt to show up
+        testUtils.waitForUserPrompt(reader1);
+        testUtils.writeLine(writer1, playerNames.get(0));
     }
 
     @When("{string} rolls the following")

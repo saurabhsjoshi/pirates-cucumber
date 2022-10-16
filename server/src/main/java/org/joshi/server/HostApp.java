@@ -74,11 +74,11 @@ public class HostApp {
             ConsoleUtils.printSysMsg("RIGGING ENABLED");
         }
 
-        host = new Player(new PlayerId(UUID.randomUUID().toString(), ConsoleUtils.userPrompt("Enter username to start server")));
         server = new Server(port);
+        host = new Player(new PlayerId(UUID.randomUUID().toString(), ConsoleUtils.userPrompt("Enter username to start server")));
 
         // Add host to the game
-        game.addPlayer(host);
+        game.addHostPlayer(host);
 
 
         MessageHandler handler = ((senderId, msg) -> {

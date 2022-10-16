@@ -47,6 +47,10 @@ public class Game {
         players.add(player);
     }
 
+    public void addHostPlayer(Player player) {
+        players.add(0, player);
+    }
+
     /**
      * Method that indicates if the game can start.
      *
