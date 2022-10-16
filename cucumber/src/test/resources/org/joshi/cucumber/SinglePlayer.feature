@@ -397,3 +397,25 @@ Feature: Single Player Scoring
     And 'Player1' ends turn
     Then Player scores are the following
       | Player1 9000 |
+
+  @R59
+  Scenario: Row 59
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'GOLD' fortune card
+    And 'Player1' rolls the following
+      | MONKEY |
+      | MONKEY |
+      | MONKEY |
+      | MONKEY |
+      | MONKEY |
+      | MONKEY |
+      | SWORD  |
+      | SWORD  |
+    And 'Player1' re-rolls dice with index '6 7' to get the following
+      | MONKEY |
+      | MONKEY |
+    And 'Player1' ends turn
+    Then Player scores are the following
+      | Player1 4600 |
