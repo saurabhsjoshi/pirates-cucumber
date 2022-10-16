@@ -1,5 +1,8 @@
 package org.joshi.cucumber;
 
+import org.joshi.pirates.cards.FortuneCard;
+import org.joshi.pirates.cards.SeaBattleCard;
+import org.joshi.pirates.cards.SkullCard;
 import org.joshi.pirates.ui.ConsoleUtils;
 
 import java.io.BufferedReader;
@@ -35,8 +38,25 @@ public class TestUtils {
         return lines;
     }
 
-    public List<String> waitForUserPrompt(BufferedReader reader) throws IOException {
-        return waitForPrompt(reader, ConsoleUtils.USER_PROMPT);
+    public void waitForUserPrompt(BufferedReader reader) throws IOException {
+        waitForPrompt(reader, ConsoleUtils.USER_PROMPT);
+    }
+
+    /**
+     * Waits for a user prompt and then enters the given rigged fortune card.
+     */
+    public void rigFortuneCard(BufferedReader reader, BufferedWriter writer, FortuneCard fortuneCard) throws IOException {
+        waitForUserPrompt(reader);
+        String line;
+        if (fortuneCard instanceof SeaBattleCard seaBattleCard) {
+            line = FortuneCard.Type.SEA_BATTLE.ordinal() + " " + seaBattleCard.getSwords();
+        } else if (fortuneCard instanceof SkullCard skullCard) {
+            line = FortuneCard.Type.SKULLS.ordinal() + " " + skullCard.getSkulls();
+        } else {
+            line = String.valueOf(fortuneCard.getType().ordinal());
+        }
+
+        writeLine(writer, line);
     }
 
     public void writeLine(BufferedWriter writer, String line) throws IOException {

@@ -7,6 +7,9 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.joshi.pirates.cards.FortuneCard;
+import org.joshi.pirates.cards.SeaBattleCard;
+import org.joshi.pirates.cards.SkullCard;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -77,9 +80,20 @@ public class CommonStepDefs {
         testUtils.writeLine(writer1, playerNames.get(0));
     }
 
+    @When("{string} gets {string} fortune card")
+    public void playerGetsFortuneCard(String playerName, String card) throws IOException {
+        // Rig fortune card
+        testUtils.rigFortuneCard(getReader(playerName), getWriter(playerName), getCard(card));
+    }
+
     @When("{string} rolls the following")
     public void playerRollsTheFollowing(String playerName, List<String> roll) {
+        //TODO
+    }
 
+    @Then("{string} gets disqualified")
+    public void playerGetsDisqualified(String playerName) {
+        // TODO
     }
 
     @Then("{string} gets score of {int}")
@@ -114,5 +128,47 @@ public class CommonStepDefs {
                 "PORT", String.valueOf(port));
         builder.directory(new File(getCurrentPath()));
         return builder.start();
+    }
+
+    private BufferedReader getReader(String playerName) {
+        var index = playerNames.indexOf(playerName);
+
+        if (index == 0) {
+            return reader1;
+        }
+
+        return null;
+    }
+
+    private BufferedWriter getWriter(String playerName) {
+        var index = playerNames.indexOf(playerName);
+
+        if (index == 0) {
+            return writer1;
+        }
+
+        return null;
+    }
+
+    private FortuneCard getCard(String card) {
+        var split = card.split("\\s+");
+
+        // Normal cards
+        if (split.length == 1) {
+            return new FortuneCard(FortuneCard.Type.valueOf(split[0]));
+        }
+
+        String name = split[0];
+
+        switch (name) {
+            case "SEA_BATTLE" -> {
+                return new SeaBattleCard(Integer.parseInt(split[1]));
+            }
+            case "SKULLS" -> {
+                return new SkullCard(Integer.parseInt(split[1]));
+            }
+
+        }
+        return null;
     }
 }

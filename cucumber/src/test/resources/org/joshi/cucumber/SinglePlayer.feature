@@ -6,7 +6,9 @@ Feature: Single Player Scoring
     Given The game starts with 1 player
     And The player names are the following
       | Player1 |
-    When 'Player1' rolls the following
+    When 'Player1' gets 'GOLD' fortune card
+    And 'Player 1' rolls the following
       | 3 SKULL |
       | 5 SWORD |
-    Then 'Player1' gets score of 0
+    Then 'Player1' gets disqualified
+    And 'Player1' gets score of 0
