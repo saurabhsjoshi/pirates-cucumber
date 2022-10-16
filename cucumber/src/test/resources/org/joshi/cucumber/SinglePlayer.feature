@@ -378,3 +378,22 @@ Feature: Single Player Scoring
     And 'Player1' ends turn
     Then Player scores are the following
       | Player1 5400 |
+
+  @R58
+  Scenario: Row 58
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'CAPTAIN' fortune card
+    And 'Player1' rolls the following
+      | SWORD |
+      | SWORD |
+      | SWORD |
+      | SWORD |
+      | SWORD |
+      | SWORD |
+      | SWORD |
+      | SWORD |
+    And 'Player1' ends turn
+    Then Player scores are the following
+      | Player1 9000 |
