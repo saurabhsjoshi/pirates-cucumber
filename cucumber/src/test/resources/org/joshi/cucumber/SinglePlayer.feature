@@ -196,3 +196,22 @@ Feature: Single Player Scoring
     Then Player scores are the following
       | Player1 500 |
 
+  @R48
+  Scenario: Row 48
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'DIAMOND' fortune card
+    And 'Player1' rolls the following
+      | GOLD_COIN |
+      | GOLD_COIN |
+      | GOLD_COIN |
+      | GOLD_COIN |
+      | SKULL     |
+      | SKULL     |
+      | SWORD     |
+      | SWORD     |
+    And 'Player1' ends turn
+    Then Player scores are the following
+      | Player1 700 |
+
