@@ -302,3 +302,22 @@ Feature: Single Player Scoring
     And 'Player1' ends turn
     Then Player scores are the following
       | Player1 600 |
+
+  @R54
+  Scenario: Row 54
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'GOLD' fortune card
+    And 'Player1' rolls the following
+      | MONKEY |
+      | MONKEY |
+      | MONKEY |
+      | MONKEY |
+      | MONKEY |
+      | MONKEY |
+      | SKULL  |
+      | SKULL  |
+    And 'Player1' ends turn
+    Then Player scores are the following
+      | Player1 1100 |
