@@ -135,3 +135,25 @@ Feature: Single Player Scoring
     And 'Player1' ends turn
     Then Player scores are the following
       | Player1 800 |
+
+  @R45
+  Scenario: Row 45
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'GOLD' fortune card
+    And 'Player1' rolls the following
+      | MONKEY |
+      | MONKEY |
+      | SKULL  |
+      | SKULL  |
+      | SWORD  |
+      | SWORD  |
+      | PARROT |
+      | PARROT |
+    And 'Player1' re-rolls dice with index '6 7' to get the following
+      | SWORD  |
+      | MONKEY |
+    And 'Player1' ends turn
+    Then Player scores are the following
+      | Player1 300 |
