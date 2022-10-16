@@ -335,8 +335,27 @@ Feature: Single Player Scoring
       | PARROT |
       | PARROT |
       | PARROT |
-      | PARROT  |
+      | PARROT |
       | SKULL  |
     And 'Player1' ends turn
     Then Player scores are the following
       | Player1 2100 |
+
+  @R56
+  Scenario: Row 56
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'GOLD' fortune card
+    And 'Player1' rolls the following
+      | GOLD_COIN |
+      | GOLD_COIN |
+      | GOLD_COIN |
+      | GOLD_COIN |
+      | GOLD_COIN |
+      | GOLD_COIN |
+      | GOLD_COIN |
+      | GOLD_COIN |
+    And 'Player1' ends turn
+    Then Player scores are the following
+      | Player1 5400 |
