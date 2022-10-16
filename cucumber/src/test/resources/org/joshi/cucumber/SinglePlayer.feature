@@ -278,3 +278,27 @@ Feature: Single Player Scoring
     Then Player scores are the following
       | Player1 1200 |
 
+  @R53
+  Scenario: Row 53
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'GOLD' fortune card
+    And 'Player1' rolls the following
+      | SKULL  |
+      | MONKEY |
+      | MONKEY |
+      | PARROT |
+      | PARROT |
+      | SWORD  |
+      | SWORD  |
+      | SWORD  |
+    And 'Player1' re-rolls dice with index '1 2' to get the following
+      | SKULL |
+      | SWORD |
+    And 'Player1' re-rolls dice with index '3 4' to get the following
+      | SWORD  |
+      | MONKEY |
+    And 'Player1' ends turn
+    Then Player scores are the following
+      | Player1 600 |
