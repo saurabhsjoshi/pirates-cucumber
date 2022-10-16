@@ -1,5 +1,6 @@
 package org.joshi.pirates;
 
+
 import org.joshi.pirates.cards.FortuneCard;
 import org.joshi.pirates.cards.SeaBattleCard;
 import org.joshi.pirates.cards.SkullCard;
@@ -7,34 +8,40 @@ import org.joshi.pirates.cards.SkullCard;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * This class represents a turn of a single player consisting on multiple rolls.
- */
 public class Turn {
 
     public enum State {
         DISQUALIFIED,
+        OK,
 
-        NOT_ENOUGH_ACTIVE_DIE,
-        OK
+        SKULL_ISLAND_DISQUALIFIED
     }
 
     private boolean isFirstRoll = true;
-
     private boolean isOnIslandOfSkulls = false;
-
     private boolean sorceressUsed = false;
-
     private State state = State.OK;
-
     private FortuneCard fortuneCard;
 
-    private int heldDiceCount = 0;
+    /**
+     * Keep track of number of skulls rolled.
+     */
+    private int skullsRolled = 0;
 
-    public static class SkullActivatedException extends Exception {
+    /**
+     * Exception that is thrown if the player tries to re-roll a skull.
+     */
+    public static class SkullReRolledException extends Exception {
+    }
+
+    /**
+     * Exception that is thrown when the user does not re-roll enough dice.
+     */
+    public static class NotEnoughDieException extends Exception {
     }
 
     /**
@@ -47,6 +54,8 @@ public class Turn {
      */
     private final List<Die> dice = new ArrayList<>(MAX_DICE);
 
+    private final List<Integer> rolledIndex = new ArrayList<>();
+
     /**
      * Class that allows rigging of die.
      */
@@ -54,130 +63,88 @@ public class Turn {
     }
 
     /**
-     * Mark the die with given index as being held.
-     *
-     * @param index list of indexes to mark as held
+     * First roll.
      */
-    public void hold(List<Integer> index) {
-        for (var i : index) {
-            dice.get(i).setState(Die.State.HELD);
-        }
-    }
-
-    /**
-     * Mark the die with given index as active allowing it to be re-rolled.
-     *
-     * @param index list of index to mark as active
-     * @throws SkullActivatedException exception is thrown when the player attempts to activate a skull
-     */
-    public void active(List<Integer> index) throws SkullActivatedException {
-        int skull = 0;
-
-        // Check for skulls
-        for (var i : index) {
-            if (dice.get(i).getDiceSide() == Die.Side.SKULL) {
-                skull++;
-            }
-        }
-
-        boolean invalidSkulls = false;
-        if (fortuneCard != null && fortuneCard.getType() == FortuneCard.Type.SORCERESS && !sorceressUsed) {
-            if (skull > 1) {
-                invalidSkulls = true;
-            } else {
-                sorceressUsed = true;
-            }
-        } else {
-            if (skull != 0) {
-                invalidSkulls = true;
-            }
-        }
-
-        if (invalidSkulls) {
-            throw new SkullActivatedException();
-        }
-
-        for (var i : index) {
-            dice.get(i).setState(Die.State.ACTIVE);
-        }
-    }
-
     public void roll() {
         var diceSides = Die.Side.values();
 
-        // First roll
-        if (dice.isEmpty()) {
-
-            for (int i = 0; i < MAX_DICE; i++) {
-                dice.add(new Die(diceSides[(new Random().nextInt(diceSides.length))], Die.State.ACTIVE));
-            }
-            return;
-        }
-
         for (int i = 0; i < MAX_DICE; i++) {
-            if (dice.get(i).state == Die.State.ACTIVE) {
-                dice.set(i, new Die(diceSides[(new Random().nextInt(diceSides.length))], Die.State.ACTIVE));
+            dice.add(new Die(diceSides[new Random().nextInt(diceSides.length)]));
+            rolledIndex.add(i);
+        }
+    }
+
+    public void roll(Set<Integer> index) throws SkullReRolledException, NotEnoughDieException {
+        int skullCount = 0;
+        boolean sorceressInvoked = false;
+
+        // Check for skulls
+        for (int i : index) {
+            if (dice.get(i).getDiceSide() == Die.Side.SKULL) {
+                skullCount++;
             }
         }
+
+        if (skullCount > 0) {
+            // Check if sorceress can be used
+            if (fortuneCard.getType() == FortuneCard.Type.SORCERESS && !sorceressUsed && skullCount == 1) {
+                sorceressUsed = true;
+                sorceressInvoked = true;
+            } else {
+                throw new SkullReRolledException();
+            }
+        }
+
+        if (index.size() < 2 && !sorceressInvoked) {
+            throw new NotEnoughDieException();
+        }
+
+        var diceSides = Die.Side.values();
+
+        for (int i : index) {
+            rolledIndex.add(i);
+            dice.set(i, new Die(diceSides[new Random().nextInt(diceSides.length)]));
+        }
+
         isFirstRoll = false;
     }
 
     public void postRoll() {
-        // Check skulls
-        for (var die : dice) {
-            if (die.diceSide == Die.Side.SKULL && die.state != Die.State.HELD) {
-                heldDiceCount++;
-                die.setState(Die.State.HELD);
+        int currentRollSkulls = 0;
+
+        for (var i : rolledIndex) {
+            if (dice.get(i).getDiceSide() == Die.Side.SKULL) {
+                currentRollSkulls++;
+                skullsRolled++;
             }
         }
-        updateState();
-    }
 
-    public void updateState() {
+        rolledIndex.clear();
+
         int skulls = 0;
-        int active = 0;
 
         if (fortuneCard instanceof SkullCard skullCard) {
             skulls += skullCard.getSkulls();
         }
 
         for (var die : dice) {
-            if (die.state == Die.State.ACTIVE) active++;
-            if (die.diceSide == Die.Side.SKULL) skulls++;
+            if (die.getDiceSide() == Die.Side.SKULL) {
+                skulls++;
+            }
         }
 
         if (isFirstRoll && skulls > 3 && fortuneCard.getType() != FortuneCard.Type.SEA_BATTLE) {
             isOnIslandOfSkulls = true;
         } else if (skulls > 2 && !isOnIslandOfSkulls) {
             state = State.DISQUALIFIED;
-            return;
         }
 
-        if (active < 2) {
-            state = State.NOT_ENOUGH_ACTIVE_DIE;
-            return;
+        // If player is on island of skull and has not rolled a skull they are disqualified
+        if (!isFirstRoll && isOnIslandOfSkulls && currentRollSkulls == 0) {
+            state = State.SKULL_ISLAND_DISQUALIFIED;
         }
-
-        state = State.OK;
     }
 
-    /**
-     * Method that checks if the player is on Island of Skulls.
-     */
-    boolean onSkullIsland() {
-        return isOnIslandOfSkulls;
-    }
-
-    public void setOnIslandOfSkulls(boolean onIslandOfSkulls) {
-        isOnIslandOfSkulls = onIslandOfSkulls;
-    }
-
-    /**
-     * End this turn and return the score. If the score is negative, it indicates that other players have lost those
-     * points, like in the case of player being on skull island.
-     *
-     * @return score earned this round
-     */
     public TurnResult complete() {
         var expectedChestSize = dice.size();
 
@@ -185,7 +152,7 @@ public class Turn {
         if (state == State.DISQUALIFIED) {
             if (fortuneCard instanceof SeaBattleCard seaBattleCard) {
                 var count = dice.stream()
-                        .filter(s -> s.diceSide == Die.Side.SWORD)
+                        .filter(s -> s.getDiceSide() == Die.Side.SWORD)
                         .count();
                 if (count < seaBattleCard.getSwords()) {
                     return new TurnResult(false, -seaBattleCard.getBonus());
@@ -196,7 +163,7 @@ public class Turn {
                 return new TurnResult(false, 0);
             }
             // Only die that are protected will be used for scoring
-            dice.removeIf(die -> die.state != Die.State.IN_TREASURE_CHEST);
+            dice.removeIf(die -> die.getState() != Die.State.IN_TREASURE_CHEST);
         }
 
         Stream<Die> bonusObj = Stream.empty();
@@ -211,7 +178,7 @@ public class Turn {
 
         List<Die> sides = Stream
                 .concat(bonusObj, dice.stream()
-                        .filter(s -> s.diceSide != Die.Side.SKULL))
+                        .filter(s -> s.getDiceSide() != Die.Side.SKULL))
                 .collect(Collectors.toList());
 
         boolean hasSkulls = sides.size() != expectedChestSize;
@@ -220,7 +187,7 @@ public class Turn {
             sides = sides.stream()
                     .peek(s -> {
                         if (s.getDiceSide() == Die.Side.PARROT) {
-                            s.diceSide = Die.Side.MONKEY;
+                            s.setDiceSide(Die.Side.MONKEY);
                         }
                     })
                     .collect(Collectors.toList());
@@ -232,7 +199,7 @@ public class Turn {
         // Sea battle
         if (fortuneCard instanceof SeaBattleCard seaBattleCard) {
             var count = dice.stream()
-                    .filter(die -> die.diceSide == Die.Side.SWORD)
+                    .filter(die -> die.getDiceSide() == Die.Side.SWORD)
                     .count();
 
             if (count < seaBattleCard.getSwords()) {
@@ -265,7 +232,7 @@ public class Turn {
         }
 
         if (isOnIslandOfSkulls) {
-            score = -(heldDiceCount * 100);
+            score = -(skullsRolled * 100);
 
             if (fortuneCard instanceof SkullCard skullCard) {
                 score -= (skullCard.getSkulls() * 100);
@@ -280,14 +247,6 @@ public class Turn {
         return new TurnResult(isOnIslandOfSkulls, score);
     }
 
-    public State getState() {
-        return state;
-    }
-
-    public void setFortuneCard(FortuneCard card) {
-        this.fortuneCard = card;
-    }
-
     /**
      * Add die with given indices to the treasure chest.
      *
@@ -295,7 +254,7 @@ public class Turn {
      */
     public void addToChest(List<Integer> dieIndex) {
         for (var i : dieIndex) {
-            dice.get(i).state = Die.State.IN_TREASURE_CHEST;
+            dice.get(i).setState(Die.State.IN_TREASURE_CHEST);
         }
     }
 
@@ -310,11 +269,24 @@ public class Turn {
         }
     }
 
+    public void setFortuneCard(FortuneCard fortuneCard) {
+        this.fortuneCard = fortuneCard;
+    }
+
     public boolean isOnIslandOfSkulls() {
         return isOnIslandOfSkulls;
+    }
+
+    public State getState() {
+        return state;
     }
 
     public List<Die> getDice() {
         return dice;
     }
+
+    public boolean isDisqualified() {
+        return state == State.DISQUALIFIED || state == State.SKULL_ISLAND_DISQUALIFIED;
+    }
+
 }

@@ -16,8 +16,10 @@ public class ConsoleUtils {
     private static final String SYSTEM_MSG_SEPARATOR = "######";
     public static final String DICE_STATE_MSG = "DICE STATE";
     public static final String DEAD_MSG = "YOU ARE DISQUALIFIED (3 SKULLS)";
-    public static final String SCORE_MSG = "PLAYER SCORES";
-    public static final String SKULL_ACTIVATE_MSG = "CANNOT ACTIVATE SKULL";
+
+    public static final String DEAD_MSG_SKULL_ISLAND = "YOU ARE DISQUALIFIED (DID NOT ROLL SKULL)";
+
+    public static final String SKULL_ACTIVATE_MSG = "CANNOT RE-ROLL SKULL";
 
     public static final String WINNER_MSG = "THIS GAME HAS A WINNER";
 
@@ -45,12 +47,10 @@ public class ConsoleUtils {
 
     public static String printRoundOptions(FortuneCard card) {
         printSysMsg("OPTIONS");
-        System.out.println("1. Set die as active");
-        System.out.println("2. Hold dice");
-        System.out.println("3. Re roll");
+        System.out.println("1. Re roll");
 
         if (card.getType() == FortuneCard.Type.TREASURE_CHEST) {
-            System.out.println("4. Select die to put in treasure chest");
+            System.out.println("2. Select die to put in treasure chest");
         }
 
         System.out.println("0. Complete turn");
@@ -84,7 +84,8 @@ public class ConsoleUtils {
         printSysMsg(DICE_STATE_MSG);
         for (int i = 0; i < dice.size(); i++) {
             var die = dice.get(i);
-            System.out.printf("%-1s %-10s %-10s\n", i, die.getDiceSide().name(), die.getState().name());
+            System.out.printf("%-1s %-10s %-10s\n", i, die.getDiceSide().name(),
+                    (die.getState() == Die.State.IN_TREASURE_CHEST ? "IN_TREASURE_CHEST" : " "));
         }
     }
 
@@ -117,6 +118,9 @@ public class ConsoleUtils {
 
     public static void printDeadMsg() {
         printSysMsg(DEAD_MSG);
+    }
+    public static void printDeadSkullIsland() {
+        printSysMsg(DEAD_MSG_SKULL_ISLAND);
     }
 
     public static void printSysMsg(String msg) {

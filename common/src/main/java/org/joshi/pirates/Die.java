@@ -22,6 +22,10 @@ public class Die {
         return diceSide;
     }
 
+    public void setDiceSide(Side diceSide) {
+        this.diceSide = diceSide;
+    }
+
     public void setState(State state) {
         this.state = state;
     }
@@ -32,7 +36,6 @@ public class Die {
     public enum State {
         HELD,
         ACTIVE,
-
         IN_TREASURE_CHEST
     }
 

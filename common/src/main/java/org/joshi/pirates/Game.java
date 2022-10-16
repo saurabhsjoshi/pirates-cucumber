@@ -38,10 +38,6 @@ public class Game {
         cardDeck.shuffle();
     }
 
-    public Game() {
-        this(3);
-    }
-
     /**
      * Method to add player to this game.
      *
@@ -135,14 +131,5 @@ public class Game {
 
     public PlayerId getCurrentPlayerId() {
         return players.get(currentPlayer).getPlayerId();
-    }
-
-    /**
-     * Allows the next fortune card to be rigged.
-     *
-     * @param fortuneCard next fortune card
-     */
-    void setRiggedFortuneCard(FortuneCard fortuneCard) {
-        currentCard = fortuneCard;
     }
 }
