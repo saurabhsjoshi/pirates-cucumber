@@ -28,11 +28,11 @@ Feature: Single Player Scoring
     When 'Player1' gets 'GOLD' fortune card
     And 'Player1' rolls the following
       | SKULL  |
-      | PARROT  |
       | PARROT |
       | PARROT |
       | PARROT |
-      | SWORD |
+      | PARROT |
+      | SWORD  |
       | SWORD  |
       | SWORD  |
     And 'Player1' re-rolls dice with index '5 6 7' to get the following
@@ -61,6 +61,32 @@ Feature: Single Player Scoring
     And 'Player1' re-rolls dice with index '6 7' to get the following
       | SKULL |
       | SWORD |
+    Then 'Player1' gets disqualified
+    And Player scores are the following
+      | Player1 0 |
+
+  @R41
+  Scenario: Row 41
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'GOLD' fortune card
+    And 'Player1' rolls the following
+      | SKULL  |
+      | PARROT |
+      | PARROT |
+      | PARROT |
+      | PARROT |
+      | SWORD  |
+      | SWORD  |
+      | SWORD  |
+    And 'Player1' re-rolls dice with index '5 6 7' to get the following
+      | SKULL  |
+      | MONKEY |
+      | MONKEY |
+    And 'Player1' re-rolls dice with index '6 7' to get the following
+      | SKULL  |
+      | MONKEY |
     Then 'Player1' gets disqualified
     And Player scores are the following
       | Player1 0 |
