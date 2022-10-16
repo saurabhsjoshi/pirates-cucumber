@@ -21,7 +21,7 @@ jar {
                 'Class-Path': 'common.jar',
                 'Main-Class': 'org.joshi.client.ClientApp'
     }
-    destinationDirectory.set(file("$rootDir/bin"))
+    destinationDirectory.set(file("$rootDir/cucumber"))
 }
 
 test {

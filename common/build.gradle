@@ -17,7 +17,7 @@ dependencies {
 }
 
 jar {
-    destinationDirectory.set(file("$rootDir/bin"))
+    destinationDirectory.set(file("$rootDir/cucumber"))
 }
 
 
