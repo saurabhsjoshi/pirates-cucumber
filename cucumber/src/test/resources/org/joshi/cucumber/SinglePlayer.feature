@@ -116,3 +116,22 @@ Feature: Single Player Scoring
     And 'Player1' ends turn
     Then Player scores are the following
       | Player1 4800 |
+
+  @R44
+  Scenario: Row 44
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'CAPTAIN' fortune card
+    And 'Player1' rolls the following
+      | MONKEY    |
+      | MONKEY    |
+      | PARROT    |
+      | PARROT    |
+      | DIAMOND   |
+      | DIAMOND   |
+      | GOLD_COIN |
+      | GOLD_COIN |
+    And 'Player1' ends turn
+    Then Player scores are the following
+      | Player1 800 |
