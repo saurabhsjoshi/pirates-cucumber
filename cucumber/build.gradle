@@ -27,6 +27,11 @@ test {
     include 'org/joshi/cucumber/**'
 }
 
+clean {
+    // Delete log files
+    delete 'logs'
+}
+
 tasks.withType(Test) {
     useJUnitPlatform()
     // Work around. Gradle does not include enough information to disambiguate

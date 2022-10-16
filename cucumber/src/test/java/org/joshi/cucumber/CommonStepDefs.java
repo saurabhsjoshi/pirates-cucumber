@@ -8,6 +8,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class CommonStepDefs {
     private Thread loggerThread;
 
     @Before
-    public void setup(Scenario scenario) {
+    public void setup(Scenario scenario) throws IOException {
         logger = new Logger(new ArrayList<>(scenario.getSourceTagNames()).get(0).substring(1) + ".txt");
         loggerThread = new Thread(logger);
         loggerThread.start();

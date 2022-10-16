@@ -20,6 +20,9 @@ jar {
     destinationDirectory.set(file("$rootDir/cucumber"))
 }
 
+clean {
+    delete "$rootDir/cucumber/common.jar"
+}
 
 test {
     useJUnitPlatform()

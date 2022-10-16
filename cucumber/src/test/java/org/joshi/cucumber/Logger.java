@@ -2,8 +2,11 @@ package org.joshi.cucumber;
 
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -17,8 +20,9 @@ public class Logger implements Runnable {
 
     private final String filename;
 
-    public Logger(String filename) {
-        this.filename = filename;
+    public Logger(String filename) throws IOException {
+        Files.createDirectories(Paths.get("logs"));
+        this.filename = "logs" + File.separator + filename;
     }
 
     @Override
