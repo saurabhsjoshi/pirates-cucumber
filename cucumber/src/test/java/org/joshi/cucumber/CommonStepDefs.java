@@ -128,7 +128,7 @@ public class CommonStepDefs {
 
         for (var expectedScore : expectedScores) {
             var split = expectedScore.split("\\s+");
-            assertEquals(scores.get(split[0]), Integer.parseInt(split[1]));
+            assertEquals(Integer.parseInt(split[1]), scores.get(split[0]));
         }
     }
 

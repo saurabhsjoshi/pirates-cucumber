@@ -419,3 +419,25 @@ Feature: Single Player Scoring
     And 'Player1' ends turn
     Then Player scores are the following
       | Player1 4600 |
+
+  @R60
+  Scenario: Row 60
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'DIAMOND' fortune card
+    And 'Player1' rolls the following
+      | MONKEY |
+      | MONKEY |
+      | SKULL  |
+      | SKULL  |
+      | SWORD  |
+      | SWORD  |
+      | PARROT |
+      | PARROT |
+    And 'Player1' re-rolls dice with index '6 7' to get the following
+      | DIAMOND |
+      | DIAMOND |
+    And 'Player1' ends turn
+    Then Player scores are the following
+      | Player1 400 |
