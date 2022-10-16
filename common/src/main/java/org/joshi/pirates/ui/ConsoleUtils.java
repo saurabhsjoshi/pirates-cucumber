@@ -23,6 +23,8 @@ public class ConsoleUtils {
 
     public static final String WINNER_MSG = "THIS GAME HAS A WINNER";
 
+    public static final String SCORE_MSG = "PLAYER SCORES";
+
     private static final Scanner scanner = new Scanner(System.in);
 
     /**
@@ -90,14 +92,14 @@ public class ConsoleUtils {
     }
 
     public static void printPlayerScores(List<Player> players) {
-        printSysMsg("PLAYER SCORES");
+        printSysMsg(SCORE_MSG);
         for (var player : players) {
             System.out.printf("%-1s %-10s \n", player.getPlayerId().username(), player.getScore());
         }
     }
 
     public static void printPlayerScores(Map<String, Integer> players) {
-        printSysMsg("PLAYER SCORES");
+        printSysMsg(SCORE_MSG);
         for (var player : players.entrySet()) {
             System.out.printf("%-1s %-10s \n", player.getKey(), player.getValue());
         }
@@ -119,6 +121,7 @@ public class ConsoleUtils {
     public static void printDeadMsg() {
         printSysMsg(DEAD_MSG);
     }
+
     public static void printDeadSkullIsland() {
         printSysMsg(DEAD_MSG_SKULL_ISLAND);
     }

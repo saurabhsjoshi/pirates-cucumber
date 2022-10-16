@@ -17,4 +17,5 @@ Feature: Single Player Scoring
       | SWORD |
       | SWORD |
     Then 'Player1' gets disqualified
-    And 'Player1' gets score of 0
+    And Player scores are the following
+      | Player1 0 |

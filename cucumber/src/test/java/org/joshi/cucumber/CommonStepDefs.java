@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -99,9 +100,14 @@ public class CommonStepDefs {
         assertTrue(testUtils.playerDeadMsg(getReader(playerName), playerName));
     }
 
-    @Then("{string} gets score of {int}")
-    public void playerGetsScoreOf(String playerName, int score) {
-        // TODO
+    @And("Player scores are the following")
+    public void playerScoresAreTheFollowing(List<String> expectedScores) throws IOException {
+        var scores = testUtils.readScores(reader1, expectedScores.size());
+
+        for (var expectedScore : expectedScores) {
+            var split = expectedScore.split("\\s+");
+            assertEquals(scores.get(split[0]), Integer.parseInt(split[1]));
+        }
     }
 
     private static String getJavaPath() {

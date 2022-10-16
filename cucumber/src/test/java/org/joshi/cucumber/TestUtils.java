@@ -9,9 +9,7 @@ import org.joshi.pirates.ui.ConsoleUtils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.*;
 
 public class TestUtils {
 
@@ -100,4 +98,17 @@ public class TestUtils {
         logger.push(line);
     }
 
+    public Map<String, Integer> readScores(BufferedReader reader, int num) throws IOException {
+        var scores = new HashMap<String, Integer>();
+        waitForPrompt(reader, ConsoleUtils.getSysMsg(ConsoleUtils.SCORE_MSG));
+
+        for (int i = 0; i < num; i++) {
+            String line = reader.readLine();
+            logger.push(line);
+            var split = line.split("\\s+");
+            scores.put(split[0], Integer.parseInt(split[1]));
+        }
+
+        return scores;
+    }
 }
