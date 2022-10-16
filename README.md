@@ -1,17 +1,20 @@
 # Pirates!
 
-Networked turn based game written using TDD methodology.
+Networked turn based game validated using cucumber.
 
 # Project Structure
-- `acceptance` Contains acceptance test cases
+
+- `cucumber` Contains cucumber based acceptance tests
 - `common` Contains all the game logic and unit tests
 - `server` Server executable
 - `client` Client executable
 
 # Build/Test Instructions
+
 - Build and run all the test cases `gradle clean build`
-- If using IntelliJ, execute `Run All Tests` run configuration to run all test cases
-- The final JAR files and test logs are placed under `bin` directory
+- The final JAR files are placed under `cucumber` directory
+- The log for each test case is placed under `cucumber/logs`
 
 # Author
+
 - [Saurabh Joshi](https://github.com/saurabhsjoshi)
