@@ -8,9 +8,11 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This class contains common step defs used across different features.
@@ -19,6 +21,17 @@ public class CommonStepDefs {
 
     private Logger logger;
     private Thread loggerThread;
+
+    private Process server;
+
+    private BufferedReader reader1;
+    private BufferedWriter writer1;
+
+    /**
+     * The port number that is to be used with each test. It will be incremented each time a new server is started to
+     * avoid conflicts.
+     */
+    private static final AtomicInteger port = new AtomicInteger(6794);
 
     @Before
     public void setup(Scenario scenario) throws IOException {
@@ -29,6 +42,9 @@ public class CommonStepDefs {
 
     @After
     public void teardown() {
+        if (server != null)
+            server.destroy();
+
         logger.stop();
         loggerThread.interrupt();
         try {
@@ -38,8 +54,12 @@ public class CommonStepDefs {
     }
 
     @Given("The game starts with {int} player")
-    public void theGameStartsWithOnePlayer(int numPlayers) {
-        // TODO
+    public void theGameStartsWithOnePlayer(int numPlayers) throws IOException {
+        int p = port.addAndGet(1);
+        server = startServer(p, numPlayers);
+
+        writer1 = new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
+        reader1 = new BufferedReader(new InputStreamReader(server.getInputStream()));
     }
 
 
@@ -56,5 +76,34 @@ public class CommonStepDefs {
     @Then("{string} gets score of {int}")
     public void playerGetsScoreOf(String playerName, int score) {
         // TODO
+    }
+
+    private static String getJavaPath() {
+        return ProcessHandle.current()
+                .info()
+                .command()
+                .orElseThrow();
+    }
+
+    private static String getCurrentPath() {
+        return Path.of("").toAbsolutePath().toString();
+    }
+
+    /**
+     * Starts the server jar.
+     *
+     * @param port    the port number
+     * @param players number of players in the game
+     * @return process
+     */
+    private static Process startServer(int port, int players) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(getJavaPath(),
+                "-jar",
+                "server.jar",
+                "PLAYERS", String.valueOf(players),
+                "RIGGED",
+                "PORT", String.valueOf(port));
+        builder.directory(new File(getCurrentPath()));
+        return builder.start();
     }
 }
