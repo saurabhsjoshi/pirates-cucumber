@@ -19,3 +19,25 @@ Feature: Single Player Scoring
     Then 'Player1' gets disqualified
     And Player scores are the following
       | Player1 0 |
+
+  @R39
+  Scenario: Row 39
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'GOLD' fortune card
+    And 'Player1' rolls the following
+      | SKULL  |
+      | SKULL  |
+      | PARROT |
+      | PARROT |
+      | PARROT |
+      | PARROT |
+      | SWORD  |
+      | SWORD  |
+    And 'Player1' re-rolls dice with index '6 7' to get the following
+      | SKULL |
+      | SWORD |
+    Then 'Player1' gets disqualified
+    And Player scores are the following
+      | Player1 0 |
