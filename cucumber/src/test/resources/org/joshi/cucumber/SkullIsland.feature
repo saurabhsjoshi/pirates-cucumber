@@ -20,3 +20,23 @@ Feature: Single Player Scoring with Skull Island
     Then 'Player1' gets disqualified
     And Player scores are the following
       | Player1 0 |
+
+
+  @R99
+  Scenario: Row 99
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'SKULLS 1' fortune card
+    And 'Player1' rolls the following
+      | SKULL |
+      | SKULL |
+      | SWORD |
+      | SWORD |
+      | SWORD |
+      | SWORD |
+      | SWORD |
+      | SWORD |
+    Then 'Player1' gets disqualified
+    And Player scores are the following
+      | Player1 0 |
