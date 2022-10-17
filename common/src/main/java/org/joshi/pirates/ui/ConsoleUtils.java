@@ -27,6 +27,8 @@ public class ConsoleUtils {
 
     public static final String DAMAGE_MSG = "YOU INFLICTED DAMAGE OF ";
 
+    public static final String LOSS_MSG = "YOU SUFFERED A DEDUCTION OF ";
+
     private static final Scanner scanner = new Scanner(System.in);
 
     /**
@@ -130,6 +132,10 @@ public class ConsoleUtils {
 
     public static void printDamageMsg(int damage) {
         printSysMsg(DAMAGE_MSG + damage);
+    }
+
+    public static void printLossMsg(int loss) {
+        printSysMsg(LOSS_MSG + loss);
     }
 
     public static void printSysMsg(String msg) {

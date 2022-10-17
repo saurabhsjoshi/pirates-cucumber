@@ -134,7 +134,7 @@ public class PlayerTurn {
             if (result.islandOfDead()) {
                 ConsoleUtils.printDamageMsg(score);
             } else {
-                ConsoleUtils.printSysMsg("You suffered a deduction of " + score);
+                ConsoleUtils.printLossMsg(score);
             }
         } else {
             ConsoleUtils.printSysMsg("You scored " + result.score());
