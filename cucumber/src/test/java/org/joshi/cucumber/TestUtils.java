@@ -107,8 +107,8 @@ public class TestUtils {
     /**
      * Method that returns true if the output contains player dead message.
      */
-    public boolean playerDeadMsg(BufferedReader reader, String playerName) throws IOException {
-        var lines = waitForEndTurn(reader, playerName);
+    public boolean playerDeadMsg(BufferedReader reader) throws IOException {
+        var lines = waitForPrompt(reader, ConsoleUtils.getSysMsg(ConsoleUtils.DEAD_MSG));
         boolean playerDied = false;
 
         for (String line : lines) {
@@ -128,6 +128,16 @@ public class TestUtils {
 
     public int getDamage(BufferedReader reader) throws IOException {
         var lines = waitForPrompt(reader, ConsoleUtils.SYSTEM_MSG_SEPARATOR + ConsoleUtils.DAMAGE_MSG, true);
+        var split = lines.get(lines.size() - 1).split("\\s+");
+
+        // Should contain something like 'xyz######'
+        var scoreLine = split[split.length - 1];
+        // Remove the separator
+        return Integer.parseInt(scoreLine.substring(0, scoreLine.length() - ConsoleUtils.SYSTEM_MSG_SEPARATOR.length()));
+    }
+
+    public int getLoss(BufferedReader reader) throws IOException {
+        var lines = waitForPrompt(reader, ConsoleUtils.SYSTEM_MSG_SEPARATOR + ConsoleUtils.LOSS_MSG, true);
         var split = lines.get(lines.size() - 1).split("\\s+");
 
         // Should contain something like 'xyz######'
