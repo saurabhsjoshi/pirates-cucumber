@@ -132,7 +132,7 @@ public class PlayerTurn {
         if (result.score() < 0) {
             var score = -1 * result.score();
             if (result.islandOfDead()) {
-                ConsoleUtils.printSysMsg("You inflicted damage of " + score);
+                ConsoleUtils.printDamageMsg(score);
             } else {
                 ConsoleUtils.printSysMsg("You suffered a deduction of " + score);
             }

@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class ConsoleUtils {
     public static final String USER_PROMPT = "##: ";
 
-    private static final String SYSTEM_MSG_SEPARATOR = "######";
+    public static final String SYSTEM_MSG_SEPARATOR = "######";
     public static final String DICE_STATE_MSG = "DICE STATE";
     public static final String DEAD_MSG = "YOU ARE DISQUALIFIED (3 SKULLS)";
 
@@ -24,6 +24,8 @@ public class ConsoleUtils {
     public static final String WINNER_MSG = "THIS GAME HAS A WINNER";
 
     public static final String SCORE_MSG = "PLAYER SCORES";
+
+    public static final String DAMAGE_MSG = "YOU INFLICTED DAMAGE OF ";
 
     private static final Scanner scanner = new Scanner(System.in);
 
@@ -124,6 +126,10 @@ public class ConsoleUtils {
 
     public static void printDeadSkullIsland() {
         printSysMsg(DEAD_MSG_SKULL_ISLAND);
+    }
+
+    public static void printDamageMsg(int damage) {
+        printSysMsg(DAMAGE_MSG + damage);
     }
 
     public static void printSysMsg(String msg) {
