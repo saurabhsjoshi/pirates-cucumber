@@ -154,7 +154,7 @@ public class Turn {
                 var count = dice.stream()
                         .filter(s -> s.getDiceSide() == Die.Side.SWORD)
                         .count();
-                if (count < seaBattleCard.getSwords()) {
+                if (count != seaBattleCard.getSwords()) {
                     return new TurnResult(false, -seaBattleCard.getBonus());
                 }
             }
