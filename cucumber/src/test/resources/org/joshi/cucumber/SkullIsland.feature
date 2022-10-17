@@ -69,3 +69,27 @@ Feature: Single Player Scoring with Skull Island
     Then 'Player1' inflicts 900 damage
     And Player scores are the following
       | Player1 0 |
+
+  @R102
+  Scenario: Row 102
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'CAPTAIN' fortune card
+    And 'Player1' rolls the following
+      | SKULL  |
+      | SKULL  |
+      | SKULL  |
+      | SKULL  |
+      | SKULL  |
+      | MONKEY |
+      | MONKEY |
+      | MONKEY |
+    And 'Player1' re-rolls dice with index '5 6 7' to get the following
+      | SKULL     |
+      | SKULL     |
+      | GOLD_COIN |
+    And 'Player1' ends turn
+    Then 'Player1' inflicts 1400 damage
+    And Player scores are the following
+      | Player1 0 |
