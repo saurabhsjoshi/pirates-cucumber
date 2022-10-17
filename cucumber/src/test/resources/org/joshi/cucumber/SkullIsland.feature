@@ -41,8 +41,8 @@ Feature: Single Player Scoring with Skull Island
     And Player scores are the following
       | Player1 0 |
 
-  @R100
-  Scenario: Row 100
+  @R101
+  Scenario: Row 101
     Given The game starts with 1 player
     And The player names are the following
       | Player1 |
