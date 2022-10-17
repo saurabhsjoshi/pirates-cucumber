@@ -128,13 +128,18 @@ public class CommonStepDefs {
 
     @Then("{string} ends turn")
     public void playerEndsTurn(String playerName) throws IOException {
-        testUtils.endTurn(getReader(playerName), getWriter(playerName), playerName);
+        testUtils.endTurn(getReader(playerName), getWriter(playerName));
     }
 
     @Then("{string} inflicts {int} damage")
     public void playerInflictsDamage(String playerName, int expectedDamage) throws IOException {
         var damage = testUtils.getDamage(getReader(playerName));
         assertEquals(expectedDamage, damage);
+    }
+
+    @Then("{string} is disqualified due to no skulls being rolled")
+    public void playerIsDisqualifiedDueToNoSkullsBeingRolled(String playerName) throws IOException {
+        assertTrue(testUtils.playerDeadMsgNoSkullsRolled(getReader(playerName)));
     }
 
     @And("Player scores are the following")

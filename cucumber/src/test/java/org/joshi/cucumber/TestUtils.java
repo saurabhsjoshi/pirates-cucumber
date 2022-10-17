@@ -90,6 +90,20 @@ public class TestUtils {
         return waitForPrompt(reader, ConsoleUtils.getEndTurnMsg(playerName));
     }
 
+    public boolean playerDeadMsgNoSkullsRolled(BufferedReader reader) throws IOException {
+        var lines = waitForPrompt(reader, ConsoleUtils.getSysMsg(ConsoleUtils.DEAD_MSG_SKULL_ISLAND));
+        boolean playerDied = false;
+
+        for (String line : lines) {
+            if (line.equals(ConsoleUtils.getSysMsg(ConsoleUtils.DEAD_MSG_SKULL_ISLAND))) {
+                playerDied = true;
+                break;
+            }
+        }
+
+        return playerDied;
+    }
+
     /**
      * Method that returns true if the output contains player dead message.
      */
@@ -107,10 +121,9 @@ public class TestUtils {
         return playerDied;
     }
 
-    public void endTurn(BufferedReader reader, BufferedWriter writer, String playerName) throws IOException {
+    public void endTurn(BufferedReader reader, BufferedWriter writer) throws IOException {
         waitForUserPrompt(reader);
         writeLine(writer, "0");
-        //waitForEndTurn(reader, playerName);
     }
 
     public int getDamage(BufferedReader reader) throws IOException {
