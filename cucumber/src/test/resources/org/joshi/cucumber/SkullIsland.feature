@@ -93,3 +93,29 @@ Feature: Single Player Scoring with Skull Island
     Then 'Player1' inflicts 1400 damage
     And Player scores are the following
       | Player1 0 |
+
+  @R103
+  Scenario: Row 103
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'SKULLS 2' fortune card
+    And 'Player1' rolls the following
+      | SKULL |
+      | SKULL |
+      | SKULL |
+      | SWORD |
+      | SWORD |
+      | SWORD |
+      | SWORD |
+      | SWORD |
+    And 'Player1' re-rolls dice with index '3 4 5 6 7' to get the following
+      | GOLD_COIN |
+      | GOLD_COIN |
+      | GOLD_COIN |
+      | GOLD_COIN |
+      | GOLD_COIN |
+    Then 'Player1' is disqualified due to no skulls being rolled
+    And 'Player1' inflicts 500 damage
+    And Player scores are the following
+      | Player1 0 |
