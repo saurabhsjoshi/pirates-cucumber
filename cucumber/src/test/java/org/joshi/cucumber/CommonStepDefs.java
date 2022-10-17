@@ -95,6 +95,15 @@ public class CommonStepDefs {
                 RigUtils.getDice(roll));
     }
 
+    @And("{string} puts dice with index {string} in treasure chest")
+    public void playerPutsDiceWithIndexInTreasureChest(String playerName, String index) throws IOException {
+        // Wait for prompt
+        testUtils.waitForUserPrompt(getReader(playerName));
+
+        // Put in treasure chest
+        testUtils.writeLine(getWriter(playerName), "2 " + index);
+    }
+
     @And("{string} re-rolls dice with index {string} to get the following")
     public void playerReRollsDiceWithIndexToGetTheFollowing(String playerName,
                                                             String index,
