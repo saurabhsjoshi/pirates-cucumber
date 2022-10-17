@@ -85,3 +85,26 @@ Feature: Single Player Scoring with Sea Battle
     And 'Player1' ends turn
     Then Player scores are the following
       | Player1 500 |
+
+
+  @R111
+  Scenario: Row 111
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'SEA_BATTLE 2' fortune card
+    And 'Player1' rolls the following
+      | MONKEY |
+      | MONKEY |
+      | MONKEY |
+      | MONKEY |
+      | SWORD  |
+      | SKULL  |
+      | PARROT |
+      | PARROT |
+    And 'Player1' re-rolls dice with index '6 7' to get the following
+      | SWORD |
+      | SKULL |
+    And 'Player1' ends turn
+    Then Player scores are the following
+      | Player1 500 |
