@@ -131,6 +131,12 @@ public class CommonStepDefs {
         testUtils.endTurn(getReader(playerName), getWriter(playerName), playerName);
     }
 
+    @Then("{string} inflicts {int} damage")
+    public void playerInflictsDamage(String playerName, int expectedDamage) throws IOException {
+        var damage = testUtils.getDamage(getReader(playerName));
+        assertEquals(expectedDamage, damage);
+    }
+
     @And("Player scores are the following")
     public void playerScoresAreTheFollowing(List<String> expectedScores) throws IOException {
         var scores = testUtils.readScores(reader1, expectedScores.size());

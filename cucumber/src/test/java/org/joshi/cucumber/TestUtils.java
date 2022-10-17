@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Function;
 
 public class TestUtils {
 
@@ -19,23 +20,38 @@ public class TestUtils {
         this.logger = logger;
     }
 
-    /**
-     * Function that waits until a prompt is printed in the buffered reader.
-     *
-     * @return returns list of lines that were printed before the prompt showed
-     */
-    public List<String> waitForPrompt(BufferedReader reader, String prompt) throws IOException {
+    public List<String> waitForPrompt(BufferedReader reader, String prompt, boolean startsWith) throws IOException {
         List<String> lines = new ArrayList<>();
+
+        Function<String, Boolean> check = (String line) -> {
+            if (startsWith) {
+                return line.startsWith(prompt);
+            }
+            return line.equals(prompt);
+        };
+
         String line = reader.readLine();
-        while (line != null && !line.equals(prompt)) {
+
+        while (line != null && !check.apply(line)) {
+
             if (!line.isBlank()) {
                 lines.add(line);
                 logger.push(line);
             }
             line = reader.readLine();
         }
+        lines.add(line);
         logger.push(line);
         return lines;
+    }
+
+    /**
+     * Function that waits until a prompt is printed in the buffered reader.
+     *
+     * @return returns list of lines that were printed before the prompt showed
+     */
+    public List<String> waitForPrompt(BufferedReader reader, String prompt) throws IOException {
+        return waitForPrompt(reader, prompt, false);
     }
 
     public void waitForUserPrompt(BufferedReader reader) throws IOException {
@@ -94,7 +110,17 @@ public class TestUtils {
     public void endTurn(BufferedReader reader, BufferedWriter writer, String playerName) throws IOException {
         waitForUserPrompt(reader);
         writeLine(writer, "0");
-        waitForEndTurn(reader, playerName);
+        //waitForEndTurn(reader, playerName);
+    }
+
+    public int getDamage(BufferedReader reader) throws IOException {
+        var lines = waitForPrompt(reader, ConsoleUtils.SYSTEM_MSG_SEPARATOR + ConsoleUtils.DAMAGE_MSG, true);
+        var split = lines.get(lines.size() - 1).split("\\s+");
+
+        // Should contain something like 'xyz######'
+        var scoreLine = split[split.length - 1];
+        // Remove the separator
+        return Integer.parseInt(scoreLine.substring(0, scoreLine.length() - ConsoleUtils.SYSTEM_MSG_SEPARATOR.length()));
     }
 
     public void writeLine(BufferedWriter writer, String line) throws IOException {
