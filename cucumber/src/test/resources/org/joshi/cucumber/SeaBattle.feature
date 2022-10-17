@@ -66,3 +66,22 @@ Feature: Single Player Scoring with Sea Battle
     And 'Player1' loses 1000 points
     And Player scores are the following
       | Player1 0 |
+
+  @R109
+  Scenario: Row 109
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'SEA_BATTLE 2' fortune card
+    And 'Player1' rolls the following
+      | MONKEY    |
+      | MONKEY    |
+      | MONKEY    |
+      | SWORD     |
+      | SWORD     |
+      | GOLD_COIN |
+      | PARROT    |
+      | PARROT    |
+    And 'Player1' ends turn
+    Then Player scores are the following
+      | Player1 500 |
