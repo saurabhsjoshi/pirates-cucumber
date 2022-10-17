@@ -80,3 +80,22 @@ Feature: Single Player Scoring
     And 'Player1' ends turn
     Then Player scores are the following
       | Player1 1200 |
+
+  @R95
+  Scenario: Row 95
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'MONKEY_BUSINESS' fortune card
+    And 'Player1' rolls the following
+      | MONKEY    |
+      | MONKEY    |
+      | PARROT    |
+      | GOLD_COIN |
+      | GOLD_COIN |
+      | DIAMOND   |
+      | DIAMOND   |
+      | DIAMOND   |
+    And 'Player1' ends turn
+    Then Player scores are the following
+      | Player1 1200 |
