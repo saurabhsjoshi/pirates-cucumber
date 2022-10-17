@@ -42,3 +42,22 @@ Feature: Single Player Scoring with Monkey Business
     And 'Player1' ends turn
     Then Player scores are the following
       | Player1 1700 |
+
+  @R76
+  Scenario: Row 76
+    Given The game starts with 1 player
+    And The player names are the following
+      | Player1 |
+    When 'Player1' gets 'MONKEY_BUSINESS' fortune card
+    And 'Player1' rolls the following
+      | SKULL  |
+      | SKULL  |
+      | SKULL  |
+      | MONKEY |
+      | MONKEY |
+      | MONKEY |
+      | PARROT |
+      | PARROT |
+    Then 'Player1' gets disqualified
+    And Player scores are the following
+      | Player1 0 |
