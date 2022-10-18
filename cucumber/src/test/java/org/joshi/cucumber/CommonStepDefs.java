@@ -11,7 +11,6 @@ import org.joshi.pirates.ui.ConsoleUtils;
 
 import java.io.*;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -67,7 +66,7 @@ public class CommonStepDefs {
     }
 
     @Given("The game starts with {int} player")
-    public void theGameStartsWithPlayer(int numPlayers) throws IOException, InterruptedException {
+    public void theGameStartsWithPlayer(int numPlayers) throws IOException {
         int p = port.addAndGet(1);
         server = startServer(p, numPlayers);
 
@@ -80,13 +79,12 @@ public class CommonStepDefs {
             // Wait for server to start
             testUtils.waitForPrompt(reader1, ConsoleUtils.getServerStartedMsg());
 
-            player2 = startClient(p);
-            player3 = startClient(p);
-
             try {
+                player2 = startClient(p);
                 writer2 = new BufferedWriter(new OutputStreamWriter(player2.getOutputStream()));
                 reader2 = new BufferedReader(new InputStreamReader(player2.getInputStream()));
 
+                player3 = startClient(p);
                 writer3 = new BufferedWriter(new OutputStreamWriter(player3.getOutputStream()));
                 reader3 = new BufferedReader(new InputStreamReader(player3.getInputStream()));
             } catch (Exception ignore) {
@@ -98,7 +96,7 @@ public class CommonStepDefs {
 
 
     @And("The player names are the following")
-    public void thePlayerNamesAreTheFollowing(List<String> names) throws IOException, InterruptedException {
+    public void thePlayerNamesAreTheFollowing(List<String> names) throws IOException {
         playerNames.addAll(names);
 
         // Wait for player name prompt to show up
@@ -184,6 +182,12 @@ public class CommonStepDefs {
     @Then("{string} is disqualified due to no skulls being rolled")
     public void playerIsDisqualifiedDueToNoSkullsBeingRolled(String playerName) throws IOException {
         assertTrue(testUtils.playerDeadMsgNoSkullsRolled(getReader(playerName)));
+    }
+
+    @Then("{string} is declared winner")
+    public void playerIsDeclaredWinner(String playerName) throws IOException {
+        String winner = testUtils.getWinner(getReader(playerName));
+        assertEquals(playerName, winner);
     }
 
     @And("Player scores are the following")

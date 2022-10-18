@@ -58,6 +58,13 @@ public class TestUtils {
         waitForPrompt(reader, ConsoleUtils.USER_PROMPT);
     }
 
+    public String getWinner(BufferedReader reader) throws IOException {
+        waitForPrompt(reader, ConsoleUtils.getSysMsg(ConsoleUtils.WINNER_MSG));
+        String winner = reader.readLine();
+        logger.push(winner);
+        return winner.split("\\s+")[1];
+    }
+
     /**
      * Waits for a user prompt and then enters the given rigged fortune card.
      */
