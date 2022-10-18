@@ -29,6 +29,8 @@ public class ConsoleUtils {
 
     public static final String LOSS_MSG = "YOU SUFFERED A DEDUCTION OF ";
 
+    public static final String SERVER_STARTED_MSG = "SERVER STARTED";
+
     private static final Scanner scanner = new Scanner(System.in);
 
     /**
@@ -136,6 +138,14 @@ public class ConsoleUtils {
 
     public static void printLossMsg(int loss) {
         printSysMsg(LOSS_MSG + loss);
+    }
+
+    public static String getServerStartedMsg() {
+        return getSysMsg(SERVER_STARTED_MSG);
+    }
+
+    public static void printServerStartedMsg() {
+        System.out.println(getServerStartedMsg());
     }
 
     public static void printSysMsg(String msg) {

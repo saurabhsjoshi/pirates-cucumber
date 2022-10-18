@@ -7,15 +7,16 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.joshi.pirates.ui.ConsoleUtils;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * This class contains common step defs used across different features.
@@ -27,12 +28,12 @@ public class CommonStepDefs {
 
     private Thread loggerThread;
 
-    private Process server;
+    private Process server, player2, player3;
 
     private final List<String> playerNames = new ArrayList<>(3);
 
-    private BufferedReader reader1;
-    private BufferedWriter writer1;
+    private BufferedReader reader1, reader2, reader3;
+    private BufferedWriter writer1, writer2, writer3;
 
     /**
      * The port number that is to be used with each test. It will be incremented each time a new server is started to
@@ -52,6 +53,10 @@ public class CommonStepDefs {
     public void teardown() {
         if (server != null)
             server.destroy();
+        if (player2 != null)
+            player2.destroy();
+        if (player3 != null)
+            player3.destroy();
 
         logger.stop();
         loggerThread.interrupt();
@@ -62,22 +67,55 @@ public class CommonStepDefs {
     }
 
     @Given("The game starts with {int} player")
-    public void theGameStartsWithOnePlayer(int numPlayers) throws IOException {
+    public void theGameStartsWithPlayer(int numPlayers) throws IOException, InterruptedException {
         int p = port.addAndGet(1);
         server = startServer(p, numPlayers);
 
         writer1 = new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
         reader1 = new BufferedReader(new InputStreamReader(server.getInputStream()));
+
+
+        // Multiplayer game
+        if (numPlayers == 3) {
+            // Wait for server to start
+            testUtils.waitForPrompt(reader1, ConsoleUtils.getServerStartedMsg());
+
+            player2 = startClient(p);
+            player3 = startClient(p);
+
+            try {
+                writer2 = new BufferedWriter(new OutputStreamWriter(player2.getOutputStream()));
+                reader2 = new BufferedReader(new InputStreamReader(player2.getInputStream()));
+
+                writer3 = new BufferedWriter(new OutputStreamWriter(player3.getOutputStream()));
+                reader3 = new BufferedReader(new InputStreamReader(player3.getInputStream()));
+            } catch (Exception ignore) {
+                fail();
+            }
+
+        }
     }
 
 
     @And("The player names are the following")
-    public void thePlayerNamesAreTheFollowing(List<String> names) throws IOException {
+    public void thePlayerNamesAreTheFollowing(List<String> names) throws IOException, InterruptedException {
         playerNames.addAll(names);
 
         // Wait for player name prompt to show up
         testUtils.waitForUserPrompt(reader1);
         testUtils.writeLine(writer1, playerNames.get(0));
+
+        if (names.size() == 3) {
+            try {
+                testUtils.waitForUserPrompt(reader2);
+                testUtils.writeLine(writer2, playerNames.get(1));
+
+                testUtils.waitForUserPrompt(reader3);
+                testUtils.writeLine(writer3, playerNames.get(2));
+            } catch (Exception ignore) {
+                fail();
+            }
+        }
     }
 
     @When("{string} gets {string} fortune card")
@@ -184,25 +222,40 @@ public class CommonStepDefs {
                 "RIGGED",
                 "PORT", String.valueOf(port));
         builder.directory(new File(getCurrentPath()));
+        builder.redirectError(ProcessBuilder.Redirect.INHERIT);
+        return builder.start();
+    }
+
+    private static Process startClient(int port) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(getJavaPath(),
+                "-jar",
+                "client.jar",
+                "RIGGED",
+                "PORT", String.valueOf(port));
+        builder.directory(new File(getCurrentPath()));
+        builder.redirectError(ProcessBuilder.Redirect.INHERIT);
         return builder.start();
     }
 
     private BufferedReader getReader(String playerName) {
         var index = playerNames.indexOf(playerName);
 
-        if (index == 0) {
-            return reader1;
-        }
-
-        return null;
+        return switch (index) {
+            case 0 -> reader1;
+            case 1 -> reader2;
+            case 2 -> reader3;
+            default -> null;
+        };
     }
 
     private BufferedWriter getWriter(String playerName) {
         var index = playerNames.indexOf(playerName);
 
-        if (index == 0) {
-            return writer1;
-        }
-        return null;
+        return switch (index) {
+            case 0 -> writer1;
+            case 1 -> writer2;
+            case 2 -> writer3;
+            default -> null;
+        };
     }
 }

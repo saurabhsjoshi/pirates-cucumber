@@ -75,21 +75,14 @@ public class HostApp {
         }
 
         server = new Server(port);
-        host = new Player(new PlayerId(UUID.randomUUID().toString(), ConsoleUtils.userPrompt("Enter username to start server")));
-
-        // Add host to the game
-        game.addHostPlayer(host);
-
+        ConsoleUtils.printServerStartedMsg();
 
         MessageHandler handler = ((senderId, msg) -> {
             switch (msg.getType()) {
 
                 case RegisterUsrMsg.TYPE -> {
                     game.addPlayer(new Player(new PlayerId(senderId, ((RegisterUsrMsg) msg).getUsername())));
-                    if (game.canPlay()) {
-                        ConsoleUtils.startGameMsg();
-                        startTurn(game.startTurn());
-                    }
+                    startGame();
                 }
 
                 case TurnEndMsg.TYPE -> postTurn(((TurnEndMsg) msg).getResult());
@@ -98,17 +91,39 @@ public class HostApp {
 
         server.setMessageHandler(handler);
 
+        Runnable r = () -> {
+            // Wait for two players to join
+            try {
+                server.start(MAX_PLAYERS - 1);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
+
+        new Thread(r).start();
+
+        host = new Player(new PlayerId(UUID.randomUUID().toString(), ConsoleUtils.userPrompt("Enter username to start server")));
+
+        // Add host to the game
+        game.addHostPlayer(host);
+
         // Single player
         if (MAX_PLAYERS == 1) {
             ConsoleUtils.startGameMsg();
             startTurn(game.startTurn());
+        } else {
+            startGame();
         }
-
-        // Wait for two players to join
-        server.start(MAX_PLAYERS - 1);
 
         // Wait for game to end
         gameEndLatch.await();
+    }
+
+    private void startGame() throws IOException {
+        if (game.canPlay()) {
+            ConsoleUtils.startGameMsg();
+            startTurn(game.startTurn());
+        }
     }
 
     void postTurn(TurnResult result) throws IOException {
