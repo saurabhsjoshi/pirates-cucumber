@@ -24,13 +24,13 @@ public class Turn {
     private boolean isFirstRoll = true;
     private boolean isOnIslandOfSkulls = false;
     private boolean sorceressUsed = false;
-    private State state = State.OK;
-    private FortuneCard fortuneCard;
 
     /**
-     * Keep track of number of skulls rolled.
+     * Indicates that previous roll was done using sorceress.
      */
-    private int skullsRolled = 0;
+    private boolean sorceressRoll = false;
+    private State state = State.OK;
+    private FortuneCard fortuneCard;
 
     /**
      * Exception that is thrown if the player tries to re-roll a skull.
@@ -90,6 +90,7 @@ public class Turn {
             if (fortuneCard.getType() == FortuneCard.Type.SORCERESS && !sorceressUsed && skullCount == 1) {
                 sorceressUsed = true;
                 sorceressInvoked = true;
+                sorceressRoll = true;
             } else {
                 throw new SkullReRolledException();
             }
@@ -115,7 +116,6 @@ public class Turn {
         for (var i : rolledIndex) {
             if (dice.get(i).getDiceSide() == Die.Side.SKULL) {
                 currentRollSkulls++;
-                skullsRolled++;
             }
         }
 
@@ -140,9 +140,10 @@ public class Turn {
         }
 
         // If player is on island of skull and has not rolled a skull they are disqualified
-        if (!isFirstRoll && isOnIslandOfSkulls && currentRollSkulls == 0) {
+        if (!isFirstRoll && !sorceressRoll && isOnIslandOfSkulls && currentRollSkulls == 0) {
             state = State.SKULL_ISLAND_DISQUALIFIED;
         }
+        sorceressRoll = false;
     }
 
     public TurnResult complete() {
@@ -232,6 +233,14 @@ public class Turn {
         }
 
         if (isOnIslandOfSkulls) {
+            int skullsRolled = 0;
+
+            for (var die : dice) {
+                if (die.getDiceSide() == Die.Side.SKULL) {
+                    skullsRolled++;
+                }
+            }
+
             score = -(skullsRolled * 100);
 
             if (fortuneCard instanceof SkullCard skullCard) {
