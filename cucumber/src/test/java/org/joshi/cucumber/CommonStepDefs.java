@@ -11,6 +11,7 @@ import org.joshi.pirates.ui.ConsoleUtils;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -107,7 +108,7 @@ public class CommonStepDefs {
             try {
                 testUtils.waitForUserPrompt(reader2);
                 testUtils.writeLine(writer2, playerNames.get(1));
-
+                Thread.sleep(Duration.ofMillis(100).toMillis());
                 testUtils.waitForUserPrompt(reader3);
                 testUtils.writeLine(writer3, playerNames.get(2));
             } catch (Exception ignore) {
@@ -226,7 +227,7 @@ public class CommonStepDefs {
                 "RIGGED",
                 "PORT", String.valueOf(port));
         builder.directory(new File(getCurrentPath()));
-        builder.redirectError(ProcessBuilder.Redirect.INHERIT);
+        //builder.redirectError(ProcessBuilder.Redirect.INHERIT);
         return builder.start();
     }
 
@@ -237,7 +238,7 @@ public class CommonStepDefs {
                 "RIGGED",
                 "PORT", String.valueOf(port));
         builder.directory(new File(getCurrentPath()));
-        builder.redirectError(ProcessBuilder.Redirect.INHERIT);
+        //builder.redirectError(ProcessBuilder.Redirect.INHERIT);
         return builder.start();
     }
 
