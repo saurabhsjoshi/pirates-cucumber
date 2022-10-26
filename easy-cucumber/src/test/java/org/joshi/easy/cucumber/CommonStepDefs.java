@@ -214,6 +214,12 @@ public class CommonStepDefs {
         assertTrue(testUtils.playerDeadMsgNoSkullsRolled(getReader(playerName)));
     }
 
+    @JAndStep("{string} loses {int} points")
+    public void playerLosesPoints(String playerName, int expectedLoss) throws IOException {
+        var loss = testUtils.getLoss(getReader(playerName));
+        assertEquals(expectedLoss, loss);
+    }
+
     private static String getJavaPath() {
         return ProcessHandle.current()
                 .info()
