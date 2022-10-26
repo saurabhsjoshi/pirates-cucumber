@@ -15,7 +15,7 @@ dependencies {
     implementation project(":client")
     implementation project(":server")
 
-    testImplementation 'com.github.CXwudi:comp5903-easy-cucumber:0.3.1'
+    testImplementation 'com.github.CXwudi:comp5903-easy-cucumber:0.3.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'

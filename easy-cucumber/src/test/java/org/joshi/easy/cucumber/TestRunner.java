@@ -30,13 +30,15 @@ public class TestRunner {
      * @return stream of arguments consisting of feature filepath and a tag
      */
     static Stream<Arguments> getAllTags() {
-        return Stream.of("SinglePlayer.feature",
+        return Stream.of(
+                        "SinglePlayer.feature",
                         "Sorceress.feature",
                         "MonkeyBusiness.feature",
                         "TreasureChest.feature",
                         "FullChest.feature",
                         "SkullIsland.feature",
-                        "SeaBattle.feature"
+                        "SeaBattle.feature",
+                        "Multiplayer.feature"
                 )
                 .flatMap(file -> EasyCucumber.build(Paths.get(FEATURE_SRC_DIR + file), CommonStepDefs.class)
                         .getScenarios()
