@@ -128,69 +128,31 @@ public class CommonStepDefs {
                 RigUtils.getDice(roll));
     }
 
-//    @JAndStep("{string} puts dice with index {string} in treasure chest")
-//    public void playerPutsDiceWithIndexInTreasureChest(String playerName, String index) throws IOException {
-//        // Wait for prompt
-//        testUtils.waitForUserPrompt(getReader(playerName));
-//
-//        // Put in treasure chest
-//        testUtils.writeLine(getWriter(playerName), "2 " + index);
-//    }
+    @JAndStep("{string} re-rolls dice with index {string} to get the following {string}")
+    public void playerReRollsDiceWithIndexToGetTheFollowing(String playerName,
+                                                            String index,
+                                                            String rollStr) throws IOException {
 
-    //    @JAndStep("{string} re-rolls dice with index {string} to get the following {string}")
-//    public void playerReRollsDiceWithIndexToGetTheFollowing(String playerName,
-//                                                            String index,
-//                                                            String rollStr) throws IOException {
-//
-//        // Wait for prompt
-//        testUtils.waitForUserPrompt(getReader(playerName));
-//
-//        // Re roll
-//        testUtils.writeLine(getWriter(playerName), "1 " + index);
-//
-//        var roll = List.of(rollStr.split("\\s+"));
-//
-//        // Rig re roll
-//        testUtils.rigDice(
-//                getReader(playerName),
-//                getWriter(playerName),
-//                RigUtils.getDice(index, roll));
-//    }
-//
+        // Wait for prompt
+        testUtils.waitForUserPrompt(getReader(playerName));
+
+        // Re roll
+        testUtils.writeLine(getWriter(playerName), "1 " + index);
+
+        var roll = List.of(rollStr.split(","));
+
+        // Rig re roll
+        testUtils.rigDice(
+                getReader(playerName),
+                getWriter(playerName),
+                RigUtils.getDice(index, roll));
+    }
+
     @JThenStep("{string} gets disqualified")
     public void playerGetsDisqualified(String playerName) throws IOException {
         assertTrue(testUtils.playerDeadMsg(getReader(playerName)));
     }
 
-    //
-//    @JThenStep("{string} ends turn")
-//    public void playerEndsTurn(String playerName) throws IOException {
-//        testUtils.endTurn(getReader(playerName), getWriter(playerName));
-//    }
-//
-//    @JThenStep("{string} inflicts {int} damage")
-//    public void playerInflictsDamage(String playerName, int expectedDamage) throws IOException {
-//        var damage = testUtils.getDamage(getReader(playerName));
-//        assertEquals(expectedDamage, damage);
-//    }
-//
-////    @JAndStep("{string} loses {int} points")
-////    public void playerLosesPoints(String playerName, int expectedLoss) throws IOException {
-////        var loss = testUtils.getLoss(getReader(playerName));
-////        assertEquals(expectedLoss, loss);
-////    }
-//
-//    @JThenStep("{string} is disqualified due to no skulls being rolled")
-//    public void playerIsDisqualifiedDueToNoSkullsBeingRolled(String playerName) throws IOException {
-//        assertTrue(testUtils.playerDeadMsgNoSkullsRolled(getReader(playerName)));
-//    }
-//
-//    @JThenStep("{string} is declared winner")
-//    public void playerIsDeclaredWinner(String playerName) throws IOException {
-//        String winner = testUtils.getWinner(getReader(playerName));
-//        assertEquals(playerName, winner);
-//    }
-//
     @JAndStep("Player scores are the following {string}")
     public void playerScoresAreTheFollowing(String expectedStrScores) throws IOException {
 
@@ -235,7 +197,7 @@ public class CommonStepDefs {
                 "RIGGED",
                 "PORT", String.valueOf(port));
         builder.directory(new File(getCurrentPath()));
-        //builder.redirectError(ProcessBuilder.Redirect.INHERIT);
+        builder.redirectError(ProcessBuilder.Redirect.INHERIT);
         return builder.start();
     }
 
