@@ -35,7 +35,8 @@ public class TestRunner {
                         "MonkeyBusiness.feature",
                         "TreasureChest.feature",
                         "FullChest.feature",
-                        "SkullIsland.feature"
+                        "SkullIsland.feature",
+                        "SeaBattle.feature"
                 )
                 .flatMap(file -> EasyCucumber.build(Paths.get(FEATURE_SRC_DIR + file), CommonStepDefs.class)
                         .getScenarios()
