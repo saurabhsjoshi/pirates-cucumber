@@ -112,10 +112,19 @@ public class CommonStepDefs {
         }
     }
 
-    @JWhenStep("{string} gets {string} fortune card")
     public void playerGetsFortuneCard(String playerName, String card) throws IOException {
         // Rig fortune card
         testUtils.rigFortuneCard(getReader(playerName), getWriter(playerName), RigUtils.getCard(card));
+    }
+
+    @JAndStep("{string} gets {string} fortune card")
+    public void AndPlayerGetsFortuneCard(String playerName, String card) throws IOException {
+        playerGetsFortuneCard(playerName, card);
+    }
+
+    @JWhenStep("{string} gets {string} fortune card")
+    public void whenPlayerGetsFortuneCard(String playerName, String card) throws IOException {
+        playerGetsFortuneCard(playerName, card);
     }
 
     @JAndStep("{string} rolls the following {string}")
@@ -148,9 +157,18 @@ public class CommonStepDefs {
                 RigUtils.getDice(index, roll));
     }
 
-    @JThenStep("{string} gets disqualified")
     public void playerGetsDisqualified(String playerName) throws IOException {
         assertTrue(testUtils.playerDeadMsg(getReader(playerName)));
+    }
+
+    @JAndStep("{string} is disqualified")
+    public void andPlayerGetsDisqualified(String playerName) throws IOException {
+        playerGetsDisqualified(playerName);
+    }
+
+    @JThenStep("{string} gets disqualified")
+    public void thenPlayerGetsDisqualified(String playerName) throws IOException {
+        playerGetsDisqualified(playerName);
     }
 
     private void playerScoresAreTheFollowing(String expectedStrScores) throws IOException {
@@ -220,6 +238,12 @@ public class CommonStepDefs {
         assertEquals(expectedLoss, loss);
     }
 
+    @JThenStep("{string} is declared winner")
+    public void playerIsDeclaredWinner(String playerName) throws IOException {
+        String winner = testUtils.getWinner(getReader(playerName));
+        assertEquals(playerName, winner);
+    }
+
     private static String getJavaPath() {
         return ProcessHandle.current()
                 .info()
@@ -246,7 +270,7 @@ public class CommonStepDefs {
                 "RIGGED",
                 "PORT", String.valueOf(port));
         builder.directory(new File(getCurrentPath()));
-        builder.redirectError(ProcessBuilder.Redirect.INHERIT);
+        //builder.redirectError(ProcessBuilder.Redirect.INHERIT);
         return builder.start();
     }
 
