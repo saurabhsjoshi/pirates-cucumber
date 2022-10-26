@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+}
+
+group 'org.joshi'
+version ''
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation project(':common')
+    implementation project(":client")
+    implementation project(":server")
+
+    testImplementation 'com.github.CXwudi:comp5903-easy-cucumber:0.3.1'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'org.junit.platform:junit-platform-suite:1.9.0'
+}
+
+test {
+    useJUnitPlatform()
+}
