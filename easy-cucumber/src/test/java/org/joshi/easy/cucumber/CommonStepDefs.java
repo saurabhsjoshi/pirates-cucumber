@@ -153,8 +153,7 @@ public class CommonStepDefs {
         assertTrue(testUtils.playerDeadMsg(getReader(playerName)));
     }
 
-    @JAndStep("Player scores are the following {string}")
-    public void playerScoresAreTheFollowing(String expectedStrScores) throws IOException {
+    private void playerScoresAreTheFollowing(String expectedStrScores) throws IOException {
 
         var split1 = expectedStrScores.split("\\s+");
         List<String> expectedScores = new ArrayList<>();
@@ -169,6 +168,21 @@ public class CommonStepDefs {
             var split = expectedScore.split("\\s+");
             assertEquals(Integer.parseInt(split[1]), scores.get(split[0]));
         }
+    }
+
+    @JAndStep("Player scores are the following {string}")
+    public void andPlayerScoresAreTheFollowing(String expectedStrScores) throws IOException {
+        playerScoresAreTheFollowing(expectedStrScores);
+    }
+
+    @JThenStep("Player scores are the following {string}")
+    public void thenPlayerScoresAreTheFollowing(String expectedStrScores) throws IOException {
+        playerScoresAreTheFollowing(expectedStrScores);
+    }
+
+    @JAndStep("{string} ends turn")
+    public void playerEndsTurn(String playerName) throws IOException {
+        testUtils.endTurn(getReader(playerName), getWriter(playerName));
     }
 
     private static String getJavaPath() {
