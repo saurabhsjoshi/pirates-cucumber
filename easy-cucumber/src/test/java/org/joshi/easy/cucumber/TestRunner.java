@@ -1,47 +1,59 @@
 package org.joshi.easy.cucumber;
 
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Named;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import scs.comp5903.cucumber.EasyCucumber;
-import scs.comp5903.cucumber.execution.JFeature;
 import scs.comp5903.cucumber.execution.tag.BaseFilteringTag;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+/**
+ * Class that contains the tests that will execute the acceptance tests using easy-cucumber.
+ * Note: These tests should be run from cucumber module directory as that directory contains the required application
+ * JAR files.
+ */
 public class TestRunner {
 
-    @Test
-    public void singlePlayerTest() throws IOException,
-            InvocationTargetException, IllegalAccessException {
-        Path myFeatureFile = Paths.get(
-                "../easy-cucumber/src" +
-                        "/test/resources/SinglePlayer.feature");
+    /**
+     * Location of the cucumber files relative to the cucumber module directory.
+     */
+    private static final String FEATURE_SRC_DIR = "../easy-cucumber/src/test/resources/";
 
-        var tags = List.of(
-                "R37"
-        );
+    /**
+     * Generates arguments for parametrized list that invokes all cucumber scenarios using tags.
+     *
+     * @return stream of arguments consisting of feature filepath and a tag
+     */
+    static Stream<Arguments> getAllTags() {
+        return Stream.of(
+                        "SinglePlayer.feature"
+                )
+                .flatMap(file -> EasyCucumber.build(Paths.get(FEATURE_SRC_DIR + file), CommonStepDefs.class)
+                        .getScenarios()
+                        .stream()
+                        .flatMap(s -> s.getTags().stream())
+                        .map(tag -> Arguments.of(Named.of(file, FEATURE_SRC_DIR + file), tag)));
+    }
 
-        for (var tag : tags) {
-            System.out.println("TAG " + tag);
-            var stepDefs = new CommonStepDefs();
+    @ParameterizedTest
+    @MethodSource("getAllTags")
+    public void runTest(String fileName, String tag) {
+        CommonStepDefs stepDefs = new CommonStepDefs();
+        try {
+            // Setup tests
             stepDefs.setup(tag);
-
-            try {
-                var jFeature = EasyCucumber.build(myFeatureFile, stepDefs);
-                jFeature.executeByTag(BaseFilteringTag.tag(tag));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                fail("Could not execute test with tag " + tag);
-            } finally {
-                stepDefs.teardown();
-            }
+            EasyCucumber.build(Paths.get(fileName), stepDefs).executeByTag(BaseFilteringTag.tag(tag));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            fail("Could not execute test with tag '" + tag + "' in file '" + fileName + "'");
+        } finally {
+            // Teardown
+            stepDefs.teardown();
         }
-
     }
 }
