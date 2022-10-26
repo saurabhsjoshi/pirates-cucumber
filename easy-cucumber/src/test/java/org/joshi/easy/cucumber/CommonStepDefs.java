@@ -194,6 +194,26 @@ public class CommonStepDefs {
         testUtils.endTurn(getReader(playerName), getWriter(playerName));
     }
 
+    public void playerInflictsDamage(String playerName, int expectedDamage) throws IOException {
+        var damage = testUtils.getDamage(getReader(playerName));
+        assertEquals(expectedDamage, damage);
+    }
+
+    @JAndStep("{string} inflicts {int} damage")
+    public void andPlayerInflictsDamage(String playerName, int expectedDamage) throws IOException {
+        playerInflictsDamage(playerName, expectedDamage);
+    }
+
+    @JThenStep("{string} inflicts {int} damage")
+    public void thenPlayerInflictsDamage(String playerName, int expectedDamage) throws IOException {
+        playerInflictsDamage(playerName, expectedDamage);
+    }
+
+    @JThenStep("{string} is disqualified due to no skulls being rolled")
+    public void playerIsDisqualifiedDueToNoSkullsBeingRolled(String playerName) throws IOException {
+        assertTrue(testUtils.playerDeadMsgNoSkullsRolled(getReader(playerName)));
+    }
+
     private static String getJavaPath() {
         return ProcessHandle.current()
                 .info()
