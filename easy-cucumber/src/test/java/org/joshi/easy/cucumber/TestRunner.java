@@ -33,7 +33,8 @@ public class TestRunner {
         return Stream.of("SinglePlayer.feature",
                         "Sorceress.feature",
                         "MonkeyBusiness.feature",
-                        "TreasureChest.feature"
+                        "TreasureChest.feature",
+                        "FullChest.feature"
                 )
                 .flatMap(file -> EasyCucumber.build(Paths.get(FEATURE_SRC_DIR + file), CommonStepDefs.class)
                         .getScenarios()
