@@ -170,6 +170,15 @@ public class CommonStepDefs {
         }
     }
 
+    @JAndStep("{string} puts dice with index {string} in treasure chest")
+    public void playerPutsDiceWithIndexInTreasureChest(String playerName, String index) throws IOException {
+        // Wait for prompt
+        testUtils.waitForUserPrompt(getReader(playerName));
+
+        // Put in treasure chest
+        testUtils.writeLine(getWriter(playerName), "2 " + index);
+    }
+
     @JAndStep("Player scores are the following {string}")
     public void andPlayerScoresAreTheFollowing(String expectedStrScores) throws IOException {
         playerScoresAreTheFollowing(expectedStrScores);
