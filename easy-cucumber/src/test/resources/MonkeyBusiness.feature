@@ -28,3 +28,4 @@ Feature: Single Player Scoring with Monkey Business
     When 'Player1' gets 'MONKEY_BUSINESS' fortune card
     And 'Player1' rolls the following 'SKULL,SKULL,SKULL,MONKEY,MONKEY,MONKEY,PARROT,PARROT'
     Then 'Player1' gets disqualified
+    Then Player scores are the following 'Player1 0'

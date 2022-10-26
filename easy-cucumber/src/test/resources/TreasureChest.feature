@@ -26,3 +26,4 @@ Feature: Single Player Scoring with Treasure Chest
     And 'Player1' puts dice with index '4' in treasure chest
     And 'Player1' re-rolls dice with index '2 3' to get the following 'SKULL,GOLD_COIN'
     Then 'Player1' gets disqualified
+    Then Player scores are the following 'Player1 600'

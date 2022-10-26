@@ -22,3 +22,4 @@ Feature: Single Player Scoring with Sorceress
     And 'Player1' re-rolls dice with index '5 6 7' to get the following 'SKULL,PARROT,PARROT'
     And 'Player1' re-rolls dice with index '5' to get the following 'PARROT'
     And 'Player1' ends turn
+    Then Player scores are the following 'Player1 2000'

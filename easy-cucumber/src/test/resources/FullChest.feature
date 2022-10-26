@@ -46,3 +46,4 @@ Feature: Single Player Scoring
     When 'Player1' gets 'MONKEY_BUSINESS' fortune card
     And 'Player1' rolls the following 'MONKEY,MONKEY,PARROT,GOLD_COIN,GOLD_COIN,DIAMOND,DIAMOND,DIAMOND'
     And 'Player1' ends turn
+    Then Player scores are the following 'Player1 1200'
