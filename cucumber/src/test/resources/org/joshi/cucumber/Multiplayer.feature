@@ -2,7 +2,7 @@ Feature: Multiplayer Scenarios
   This feature tests and validates scoring in a multiplayer game
   which would also validate the networking aspects
 
-  @R124
+  @row124
   Scenario: Row 124
     Given The game starts with 3 player
     And The player names are the following
@@ -56,7 +56,7 @@ Feature: Multiplayer Scenarios
       | Player3 0    |
     Then 'Player1' is declared winner
 
-  @R137
+  @row137
   Scenario: Row 137
     Given The game starts with 3 player
     And The player names are the following
@@ -125,7 +125,7 @@ Feature: Multiplayer Scenarios
       | Player3 0    |
     Then 'Player1' is declared winner
 
-  @R142
+  @row142
   Scenario: Row 142
     Given The game starts with 3 player
     And The player names are the following
