@@ -161,7 +161,7 @@ public class CommonStepDefs {
         assertTrue(testUtils.playerDeadMsg(getReader(playerName)));
     }
 
-    @JAndStep("{string} is disqualified")
+    @JAndStep("{string} gets disqualified")
     public void andPlayerGetsDisqualified(String playerName) throws IOException {
         playerGetsDisqualified(playerName);
     }
